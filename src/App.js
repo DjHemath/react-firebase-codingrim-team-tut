@@ -2,22 +2,40 @@ import React from 'react';
 import './App.css';
 import TodoService from './Todo.service';
 
+import { SwipeableList, SwipeableListItem } from '@sandstreamdev/react-swipeable-list';
+import '@sandstreamdev/react-swipeable-list/dist/styles.css';
+
 function ListItem(props) {
 
   const todo = props.todo;
 
   return (
-    <div className="todo-list-item">
-      <span id="text">
-        <input checked={todo.completed} onChange={() => props.toggleCompletedHandler(todo)} type="checkbox"/>
-        <span>{todo.text}</span>
-      </span>
+    // <div className="todo-list-item">
+    //   <span id="text">
+    //     <input checked={todo.completed} onChange={() => props.toggleCompletedHandler(todo)} type="checkbox"/>
+    //     <span style={{textDecoration: todo.completed ? 'line-through': ''}}>{todo.text}</span>
+    //   </span>
 
-      <span id="action-buttons">
+    //   <span id="action-buttons">
+    //     <button onClick={() => props.editHandler(todo)}>Edit</button>
+    //     <button onClick={() => props.deleteHandler(todo)}>Delete</button>
+    //   </span>
+    // </div>
+    <SwipeableListItem
+      swipeLeft={{
+        content: <div>Completed</div>,
+        action: () => props.toggleCompletedHandler(todo)
+      }}
+      swipeRight={{
+        content: <div>Delete</div>,
+        action: () => props.deleteHandler(todo)
+      }}
+    >
+      <div className="todo-list-item">
+        <span style={{textDecoration: todo.completed ? 'line-through': ''}}>{todo.text}</span>
         <button onClick={() => props.editHandler(todo)}>Edit</button>
-        <button onClick={() => props.deleteHandler(todo)}>Delete</button>
-      </span>
-    </div>
+      </div>
+    </SwipeableListItem>
   );
 }
 
@@ -135,7 +153,7 @@ class App extends React.Component {
           <button type="submit">Add</button>
         </form>
   
-        <div id="todo-list">
+        <SwipeableList>
           {
             this.state.todos.map(todo => (
               <ListItem
@@ -147,7 +165,7 @@ class App extends React.Component {
               />
             ))
           }
-        </div>
+        </SwipeableList>
   
       </div>
     );
